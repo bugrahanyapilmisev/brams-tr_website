@@ -1,40 +1,70 @@
-# brams-tr.com — Cloudflare Yayına Alma Rehberi
+# brams-tr.com — Cloudflare Pages Yayına Alma Rehberi
 
-Alan adı Cloudflare'den alındığı için en temiz yol **Cloudflare Pages**:
-GitHub reposuna bağlanır, her push'ta otomatik yayınlar, SSL sertifikasını
-kendisi kurar ve DNS kaydını tek tıkla ekler. Ücretsiz plan bu site için
-fazlasıyla yeterli.
+Bu rehber siteyi **Cloudflare Pages** üzerinde yayına alır: GitHub reposuna
+bağlanır, her push'ta otomatik yayınlar, SSL sertifikasını kendisi kurar ve DNS
+kaydını tek tıkla ekler. Ücretsiz plan bu site için fazlasıyla yeterli.
 
-Toplam süre: ~15 dakika. DNS yayılması genelde 1–5 dakika.
+Toplam süre: ~20 dakika (mevcut Worker'dan geçiş dahil).
 
 ---
 
-## Adım 0 — Kodu GitHub'a gönderin
+## Önce okunması gereken not: Worker mı, Pages mi?
 
-Cloudflare Pages repoyu okuyacağı için ilk adım bu.
+Site şu anda **Worker** olarak yayında ve düzgün çalışıyor. Worker'da statik
+dosya sunumu (Workers Static Assets) Cloudflare'in **güncel önerdiği** yoldur;
+Pages daha eski üründür ve yeni geliştirmeler Workers tarafına yapılıyor.
+Canlı olarak doğrulandı: `_headers` uygulanıyor, uzantısız URL'ler çalışıyor,
+404 doğru dönüyor. Yani teknik olarak "yanlış deploy" değil.
+
+Pages'e geçerken bilinçli kabul ettiğiniz iki fark:
+
+| | Worker (mevcut) | Pages (hedef) |
+|---|---|---|
+| Ücretsiz public alt alan adı | `*.workers.dev` — **kapatılabilir** | `*.pages.dev` — **kapatılamaz** |
+| Cloudflare'in ürün yönü | Aktif geliştirme | Bakım/destek modu |
+| `_headers` / `_redirects` | ✅ Çalışıyor (doğrulandı) | ✅ Çalışıyor |
+| Git entegrasyonu, preview, rollback | ✅ | ✅ |
+
+`*.pages.dev` adresini kapatma imkânı yoktur; sitenin ikinci bir public kopyası
+kalıcı olarak erişilebilir olur. Sayfalardaki `canonical` etiketleri arama
+motorlarını `brams-tr.com`'a yönlendirdiği için ciddi SEO zararı olmaz.
+Tamamen kapatmak isterseniz tek yol Cloudflare Access ile erişimi kısıtlamaktır.
+
+Buna rağmen Pages tercih ediliyorsa aşağıdaki adımlar tam kurulumu verir.
+
+---
+
+## Adım 0 — Kod GitHub'da mı?
+
+Pages repoyu okuyacağı için ilk koşul bu.
 
 ```bash
 cd "c:/Users/kosot/OneDrive/Masaüstü/brams-tr/brams-tr_website"
 
 git add .
-git commit -m "BRAMS kurumsal sitesi: TR + EN, tasarım sistemi, marka görselleri"
+git commit -m "site güncellemesi"
 git push origin main
 ```
 
-Push sonrası GitHub'da `index.html`, `en/`, `css/`, `js/`, `assets/` görünmeli.
-`sources_to_create_website/` ve `dmk_mimarlık_insaat_page/` **görünmemeli**
-(`.gitignore` bunları hariç tutuyor).
+Kontrol: GitHub'da `index.html`, `en/`, `css/`, `js/`, `assets/`, `_headers`,
+`_redirects` görünmeli. `sources_to_create_website/` ve
+`dmk_mimarlık_insaat_page/` **görünmemeli** — `.gitignore` bunları hariç tutuyor.
+
+> Bu, Git yolunu tercih etmenin önemli bir nedeni: kaynak materyal (3.3 MB logo
+> ve strateji belgesi) repoya hiç girmediği için yayına da çıkamaz.
 
 ---
 
-## Adım 1 — Cloudflare Pages projesini oluşturun
+## Adım 1 — Pages projesini oluşturun
 
 1. [dash.cloudflare.com](https://dash.cloudflare.com) → giriş yapın.
-2. Sol menü: **Compute (Workers & Pages)** → **Create** → **Pages** sekmesi →
-   **Connect to Git**.
-3. **GitHub** → **Authorize / Install & Authorize** → repoya erişim izni verin.
-   (`Only select repositories` → `brams-tr_website` seçmeniz yeterli.)
-4. Repo listesinden **`bugrahanyapilmisev/brams-tr_website`** → **Begin setup**.
+2. Sol menü: **Compute (Workers & Pages)** → **Create**.
+3. Açılan ekranda üstteki **Pages** sekmesini seçin — varsayılan olarak
+   **Workers** sekmesi açılır ve "Import a repository" düğmesi sizi Worker
+   oluşturmaya götürür. İlk kurulumda Worker çıkmasının nedeni tam olarak budur.
+4. **Connect to Git** → **GitHub** → repoya erişim izni verin
+   (`Only select repositories` → `brams-tr_website` yeterli).
+5. Repo listesinden **`bugrahanyapilmisev/brams-tr_website`** → **Begin setup**.
 
 ### Build ayarları — kritik nokta
 
@@ -42,98 +72,140 @@ Bu bir statik site; **hiçbir build komutu çalıştırılmamalı**.
 
 | Alan | Değer |
 |---|---|
-| Project name | `brams-tr` |
+| Project name | `brams-tr-site` |
 | Production branch | `main` |
 | Framework preset | **None** |
 | Build command | **boş bırakın** |
 | Build output directory | `/` |
 | Root directory | **boş bırakın** |
 
-5. **Save and Deploy**.
+> **Proje adı neden `brams-tr` değil?** Mevcut Worker `brams-tr` adını
+> kullanıyor ve Workers ile Pages aynı isim alanını paylaşır. `brams-tr` adı
+> reddedilirse ya farklı bir ad seçin ya da önce Worker'ı silin (Adım 8).
+> Proje adı yalnızca `<ad>.pages.dev` adresini etkiler; özel alan adını
+> etkilemez.
 
-Yayın 30–60 saniyede biter. Size `brams-tr.pages.dev` gibi bir adres verir —
-alan adını bağlamadan önce siteyi burada test edin.
+6. **Save and Deploy**.
 
-> **Kontrol listesi (pages.dev üzerinde):**
+Yayın 30–60 saniyede biter ve `brams-tr-site.pages.dev` adresini verir.
+**Alan adını taşımadan önce siteyi burada test edin:**
+
 > - Ana sayfa hero'da logo plaketi görünüyor mu?
-> - Nav'daki TR/EN geçişi çalışıyor mu? (`/en/index.html`)
-> - `/iletisim.html` formunda "Gönder" e-posta uygulamasını açıyor mu?
-> - Mobil görünüm (telefonunuzdan açın) düzgün mü?
-> - `brams-tr.pages.dev/olmayan-sayfa` → 404 sayfası geliyor mu?
+> - Nav'daki TR/EN geçişi çalışıyor mu?
+> - `/hakkimizda` (uzantısız) açılıyor mu?
+> - `brams-tr-site.pages.dev/olmayan-sayfa` → 404 sayfası geliyor mu?
+> - Mobil görünüm düzgün mü?
+
+### Alternatif: Wrangler CLI ile Pages projesi
+
+Panelde Pages sekmesi hiç görünmüyorsa CLI ile oluşturabilirsiniz:
+
+```bash
+npx wrangler login
+npx wrangler pages project create brams-tr-site --production-branch main
+```
+
+> ⚠️ **`wrangler pages deploy .` komutunu proje kökünde ASLA çalıştırmayın.**
+> Direct upload `.gitignore`'a bakmaz; `sources_to_create_website/` ve
+> `dmk_mimarlık_insaat_page/` klasörlerini de yükler ve içerikleri public olur.
+>
+> Bu klasörde artık **üçüncü tarafa ait materyal** var: ACESSI USA'ya ait bir
+> kurumsal sunum, örnek bir kredi limiti teklif tablosu ve bir zirve dokümanı
+> (`sources_to_create_website/Photos/*.pdf`). Bunların yanlışlıkla
+> `brams-tr.com` üzerinde yayınlanması hem ticari hem hukuki bir sorun olur.
+> CLI ile yayınlamanız gerekiyorsa önce temiz bir klasör hazırlayın:
+>
+> ```bash
+> rm -rf dist && mkdir dist
+> cp -r index.html hakkimizda.html sektorler.html cozumler.html iletisim.html \
+>       404.html robots.txt sitemap.xml favicon.ico _headers _redirects \
+>       css js assets en dist/
+> npx wrangler pages deploy dist --project-name brams-tr-site
+> ```
+>
+> Git entegrasyonu bu riski tamamen ortadan kaldırdığı için tercih edilmelidir.
 
 ---
 
-## Adım 2 — brams-tr.com alan adını bağlayın
+## Adım 2 — Alan adını Worker'dan Pages'e taşıyın
 
-Proje → **Domains** sekmesi (Workers arayüzünde) veya **Custom domains**
-(klasik Pages arayüzünde).
+**Bir hostname aynı anda yalnızca tek bir Cloudflare servisine bağlanabilir.**
+`brams-tr.com` ve `www.brams-tr.com` şu anda Worker'a bağlı; Pages'e eklemeden
+önce Worker'dan çözülmeleri gerekir. Sıra önemlidir — yanlış sırada birkaç
+dakikalık kesinti yerine daha uzun bir kesinti yaşarsınız.
 
-1. **+ Add Domain** → `brams-tr.com` → onaylayın.
-2. Aynı şekilde ikinci kez **+ Add Domain** → `www.brams-tr.com`.
+**Doğru sıra:**
 
-Alan adı aynı Cloudflare hesabında olduğu için **DNS kaydını Cloudflare kendisi
-oluşturur** — elle CNAME/A kaydı girmenize gerek yok. Kökte CNAME,
-**CNAME flattening** sayesinde desteklenir; apex için A kaydına gerek yoktur.
+1. **Önce Adım 1'i bitirin.** Pages projesi yayında ve `pages.dev` üzerinde test
+   edilmiş olmalı. Alan adını çalışmayan bir projeye taşımayın.
 
-### ⚠️ "Add Domain" ile "Add Route" aynı şey değildir
+2. **Worker'dan alan adlarını kaldırın.**
+   **Compute (Workers & Pages) → `brams-tr` → Domains** →
+   `brams-tr.com` satırında **…** → **Remove** / **Delete**.
+   `www.brams-tr.com` için de aynısını yapın.
 
-Workers arayüzünde iki buton yan yana durur ve yanlışını seçmek sessizce
-başarısız olur:
+   Bu işlem DNS'teki iki `Worker` tipi kaydı da siler. Bu andan itibaren site
+   kısa süre erişilemez — normal.
 
-| | Ne yapar | DNS kaydı oluşturur mu? |
-|---|---|---|
-| **Add Domain** | Hostname'i worker'a bağlar **ve** DNS kaydını + TLS sertifikasını oluşturur | ✅ Evet |
-| **Add Route** | Yalnızca "bu URL deseni bu worker'a gitsin" der | ❌ **Hayır** |
+3. **Pages'e ekleyin.**
+   **Pages projesi → Custom domains → Set up a custom domain** →
+   `brams-tr.com` → **Continue** → **Activate domain**.
+   Ardından ikinci kez aynı akışla `www.brams-tr.com`.
 
-Bir hostname'i **Route** olarak eklerseniz ve o hostname için zaten bir DNS
-kaydı yoksa, adres **hiç çözümlenmez** — tarayıcı "site bulunamadı" der.
-Route, halihazırda var olan bir kaydın trafiğini yönlendirmek içindir.
+   Cloudflare DNS kaydını kendisi oluşturur:
 
-Doğru kurulumda `Domains` tablosu şöyle görünür — her iki satırda da
-**Environment: Production**, hiçbirinde `Route` yazmaz:
+   | Type | Name | Content | Proxy |
+   |---|---|---|---|
+   | CNAME | `brams-tr.com` | `brams-tr-site.pages.dev` | Proxied |
+   | CNAME | `www` | `brams-tr-site.pages.dev` | Proxied |
 
-| Name | Environment | Zone |
-|---|---|---|
-| `brams-tr.com` | Production | brams-tr.com |
-| `www.brams-tr.com` | Production | brams-tr.com |
+   > Kökte CNAME, **CNAME flattening** sayesinde desteklenir; apex için A kaydına
+   > gerek yoktur.
 
-Kontrol: `nslookup www.brams-tr.com` bir Cloudflare IP'si döndürmeli.
-`Non-existent domain` dönüyorsa satır Route olarak eklenmiş — silin ve
-**Add Domain** ile yeniden ekleyin.
+4. **Status** sütunu `Active` olana kadar bekleyin. Zone'da Universal SSL zaten
+   kurulu olduğu için sertifika genelde anında hazırdır; ilk seferde 15 dakikaya
+   kadar sürebilir.
 
-**Status** sütunu `Active` olana kadar bekleyin (genelde 1–5 dakika, ilk sertifika
-için nadiren 15 dakikaya kadar çıkabilir).
+Kesinti penceresi 2. ve 3. adım arasındaki süredir — pratikte 1–3 dakika.
 
-### workers.dev adresini kapatın
+### Pages'te "Add Route" tuzağı yoktur
 
-**Settings → Domains & Routes** (veya **Domains** sekmesinin üstündeki
-**Worker URL** bölümü) → `Production` satırındaki anahtarı **kapatın**.
+Worker arayüzündeki **Add Route** düğmesi DNS kaydı oluşturmaz ve hostname'i
+çözümlenemez bırakır (ilk kurulumda `www` bu yüzden çalışmamıştı). Pages
+arayüzünde yalnızca **Set up a custom domain** vardır; bu her zaman DNS kaydını
+da oluşturur. Yani bu hata Pages'te tekrarlanamaz.
 
-Açık kaldığı sürece `brams-tr.<hesap>.workers.dev` sitenin ikinci bir public
-kopyasını sunar. Sayfalardaki `canonical` etiketleri arama motorlarını
-`brams-tr.com`'a yönlendirdiği için ciddi bir SEO zararı olmaz, ama kurumsal
-bir sitede gereksiz bir yüzey — kapatmak doğrusu. `Preview` anahtarı da kapalı
-olmalı.
+Kontrol:
+
+```bash
+nslookup brams-tr.com          # Cloudflare IP'leri dönmeli
+nslookup www.brams-tr.com      # Cloudflare IP'leri dönmeli
+```
+
+`Non-existent domain` dönüyorsa custom domain henüz aktifleşmemiştir.
+Kendi bilgisayarınızdan çözümlenmiyor ama `nslookup www.brams-tr.com 1.1.1.1`
+çalışıyorsa sorun sizin modeminizin DNS önbelleğidir — modemi yeniden başlatın.
 
 ---
 
-## Adım 2.5 — URL biçimi hakkında bilmeniz gereken tek şey
+## Adım 3 — URL biçimi hakkında bilmeniz gereken tek şey
 
-Cloudflare, `hakkimizda.html` dosyasını **`/hakkimizda`** adresinde sunar ve
-`/hakkimizda.html` isteğini otomatik olarak `/hakkimizda`'ya yönlendirir
-(Workers'da 307, klasik Pages'te 308 — ikisi de zararsız).
+Cloudflare Pages, `hakkimizda.html` dosyasını **`/hakkimizda`** adresinde sunar
+ve `/hakkimizda.html` isteğini otomatik olarak `/hakkimizda`'ya **308** ile
+yönlendirir. (Worker'da bu 307'dir; ikisi de zararsızdır ve site buna göre
+hazırlanmıştır.)
 
-Bu davranışa uyum sağlanmıştır: sitedeki tüm `canonical`, `hreflang`, `og:url`
-etiketleri ve `sitemap.xml` kayıtları **uzantısız** biçimdedir
-(`https://brams-tr.com/hakkimizda`). Sayfa içi bağlantılar `.html` uzantılıdır —
-bu her ortamda (Cloudflare, yerel sunucu, dosya sistemi) çalışır; Cloudflare
-tarafında tek bir zararsız yönlendirme adımı oluşur.
+Sitedeki tüm `canonical`, `hreflang`, `og:url` etiketleri ve `sitemap.xml`
+kayıtları **uzantısız** biçimdedir (`https://brams-tr.com/hakkimizda`) — yani
+Cloudflare'in gerçekten sunduğu adresle birebir eşleşir. Sayfa içi bağlantılar
+`.html` uzantılıdır; bu her ortamda (Cloudflare, yerel sunucu, dosya sistemi)
+çalışır ve Cloudflare tarafında tek bir zararsız yönlendirme adımı oluşturur.
 
-Canlıda doğrulanmış davranış:
+Beklenen davranış:
 
 ```
 /hakkimizda        →  200  (canonical: https://brams-tr.com/hakkimizda  ✓ eşleşiyor)
-/hakkimizda.html   →  307  →  /hakkimizda
+/hakkimizda.html   →  308  →  /hakkimizda
 /olmayan-sayfa     →  404  (özel 404 sayfası)
 ```
 
@@ -143,20 +215,19 @@ Canlıda doğrulanmış davranış:
 
 ---
 
-## Adım 3 — www → kök yönlendirmesi
+## Adım 4 — www → kök yönlendirmesi
 
-İki alan adının da aynı içeriği ayrı ayrı sunması SEO açısından istenmez. Sitedeki
-tüm `canonical` etiketleri `https://brams-tr.com/...` olduğu için `www`'yu köke
-yönlendirin.
+İki alan adının da aynı içeriği ayrı ayrı sunması SEO açısından istenmez.
+Sitedeki tüm `canonical` etiketleri `https://brams-tr.com/...` olduğu için
+`www`'yu köke yönlendirin.
 
-> **Önkoşul:** Bu kuralın çalışması için `www.brams-tr.com` hostname'inin
-> Cloudflare üzerinden **çözümlenebilir ve proxy'li** olması gerekir. Yani Adım
-> 2'deki **Add Domain** işlemi yapılmış olmalı. Hostname hiç çözümlenmiyorsa
-> Redirect Rule hiçbir zaman tetiklenmez — istek Cloudflare'e ulaşmadan
+> **Önkoşul:** `www.brams-tr.com` Cloudflare üzerinden çözümlenebilir ve
+> proxy'li olmalı — yani Adım 2/3 tamamlanmış olmalı. Hostname hiç
+> çözümlenmiyorsa kural asla tetiklenmez; istek Cloudflare'e ulaşmadan
 > tarayıcıda DNS hatasıyla ölür.
 
-**Cloudflare Dashboard → brams-tr.com (Websites listesinden) → Rules → Redirect Rules
-→ Create rule**
+**Cloudflare Dashboard → brams-tr.com (Websites listesinden) → Rules →
+Redirect Rules → Create rule**
 
 - **Rule name:** `www to apex`
 - **If — Custom filter expression:**
@@ -169,9 +240,13 @@ yönlendirin.
 
 Test: `http://www.brams-tr.com/hakkimizda` → `https://brams-tr.com/hakkimizda`
 
+> Kural, Pages custom domain'inden **önce** çalışır (Redirect Rules edge'de
+> Pages/Workers'dan önce değerlendirilir), dolayısıyla `www`'yu custom domain
+> olarak bağlamış olmanız bir çelişki yaratmaz.
+
 ---
 
-## Adım 4 — SSL / HTTPS ayarları
+## Adım 5 — SSL / HTTPS ayarları
 
 **Dashboard → brams-tr.com → SSL/TLS**
 
@@ -191,7 +266,7 @@ Test: `http://www.brams-tr.com/hakkimizda` → `https://brams-tr.com/hakkimizda`
 
 ---
 
-## Adım 5 — Performans ayarları (opsiyonel ama önerilir)
+## Adım 6 — Performans ayarları (opsiyonel ama önerilir)
 
 **Dashboard → brams-tr.com → Speed → Optimization**
 
@@ -202,17 +277,20 @@ Test: `http://www.brams-tr.com/hakkimizda` → `https://brams-tr.com/hakkimizda`
 
 **Caching → Configuration**
 - **Browser Cache TTL**: `Respect Existing Headers` — repodaki `_headers` dosyası
-  görselleri 1 yıl, HTML'i her istekte doğrulanacak şekilde ayarlıyor.
+  görselleri 1 yıl (`immutable`), HTML'i her istekte doğrulanacak şekilde
+  ayarlıyor.
 
-**Auto Minify** artık Cloudflare panelinde yok (kaldırıldı); dosyalar
-elle sıkıştırılmadı, gerek de yok — CSS 27 KB, JS 5 KB civarı.
+**Auto Minify** artık Cloudflare panelinde yok (kaldırıldı); dosyalar elle
+sıkıştırılmadı, gerek de yok — CSS ~39 KB, JS ~5.5 KB.
 
 ---
 
-## Adım 6 — E-posta (info@brams-tr.com)
+## Adım 7 — E-posta (info@brams-tr.com)
 
-Site `info@brams-tr.com` adresini gösteriyor. Bu adresin çalışması için
-alan adına e-posta kurulması gerekir; Pages bunu yapmaz.
+Site her sayfada `info@brams-tr.com` adresini gösteriyor. Alan adında MX kaydı
+olmadığı sürece bu adrese gönderilen postalar geri döner — Cloudflare DNS
+ekranındaki "Email cannot reach @brams-tr.com addresses" uyarısı tam olarak bunu
+söylüyor. Pages bu işi yapmaz; ayrı kurulur.
 
 **En hızlı yol — Cloudflare Email Routing (ücretsiz, yönlendirme):**
 
@@ -225,16 +303,32 @@ alan adına e-posta kurulması gerekir; Pages bunu yapmaz.
 Bu yalnızca **gelen** postayı yönlendirir. `info@brams-tr.com` adresinden
 **gönderim** yapmak isterseniz gerçek bir posta kutusu gerekir (Google Workspace,
 Microsoft 365, Zoho Mail vb.). O durumda ilgili sağlayıcının MX kayıtlarını
-Cloudflare DNS'e ekleyin ve Email Routing'i kapatın — ikisi aynı anda MX
-sahibi olamaz.
+Cloudflare DNS'e ekleyin ve Email Routing'i kapatın — ikisi aynı anda MX sahibi
+olamaz.
 
-> Alan adında hiç e-posta kullanmayacaksanız, spam'i azaltmak için yine de
-> bir SPF kaydı ekleyin:
-> `TXT` · `@` · `v=spf1 -all`
+> Alan adında hiç e-posta kullanmayacaksanız, spam'i azaltmak için yine de bir
+> SPF kaydı ekleyin: `TXT` · `@` · `v=spf1 -all`
 
 ---
 
-## Adım 7 — Yayın sonrası SEO
+## Adım 8 — Eski Worker'ı silin
+
+Alan adları Pages'e taşınıp site doğrulandıktan sonra Worker gereksizdir ve
+karışıklık yaratır (iki proje, iki deployment geçmişi).
+
+**Compute (Workers & Pages) → `brams-tr` → Settings → Delete**
+
+Silmeden önce:
+- `brams-tr.com` ve `www.brams-tr.com` artık Pages projesinin **Custom domains**
+  listesinde ve `Active` durumda olmalı.
+- `https://brams-tr.com` ve `https://www.brams-tr.com` tarayıcıda açılmalı.
+
+Acele etmek istemiyorsanız Worker'ı bir hafta boş (alan adı bağlı olmadan)
+bırakıp sonra silebilirsiniz — bağlı alan adı olmadığı sürece trafik almaz.
+
+---
+
+## Adım 9 — Yayın sonrası SEO
 
 1. **Google Search Console** → **Add property** → **URL prefix** →
    `https://brams-tr.com`
@@ -245,6 +339,10 @@ sahibi olamaz.
 3. **International Targeting** sekmesinde hreflang hatası olmadığını kontrol edin
    (site TR/EN çiftlerini `x-default` ile birlikte tanımlıyor).
 4. İsterseniz **Bing Webmaster Tools**'a da aynı sitemap'i ekleyin.
+
+> `brams-tr-site.pages.dev` adresini Search Console'a **eklemeyin**. Kapatılamaz
+> olsa da, indekslenmesini teşvik etmenin anlamı yok; `canonical` etiketleri
+> zaten arama motorlarını apex'e yönlendiriyor.
 
 ---
 
@@ -263,19 +361,22 @@ listelenir; hatalı bir yayını **Rollback** ile geri alabilirsiniz.
 
 Bir dala (branch) push ederseniz Cloudflare otomatik olarak **preview** adresi
 üretir — büyük bir değişikliği canlıya almadan test etmek için ideal.
+Ücretsiz planda ayda 500 build ve aynı anda 1 build sınırı vardır; bu site için
+fazlasıyla yeterli.
 
 ---
 
 ## Alternatif: GitHub Pages + Cloudflare DNS
 
-Pages yerine GitHub Pages kullanmak isterseniz kayıtları elle girmeniz gerekir.
-Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
+Cloudflare yerine GitHub Pages kullanmak isterseniz kayıtları elle girmeniz
+gerekir. Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
 
 1. GitHub → repo → **Settings → Pages** → Source: `Deploy from a branch` →
    Branch: `main` / `root` → Save.
 2. Aynı ekranda **Custom domain**: `brams-tr.com` → Save.
    (Bu, repoya bir `CNAME` dosyası ekler.)
-3. Cloudflare DNS → **Records** → şu kayıtları ekleyin:
+3. Cloudflare DNS → **Records** → önce mevcut Pages/Worker kayıtlarını silin,
+   sonra şunları ekleyin:
 
 | Type | Name | Content | Proxy |
 |---|---|---|---|
@@ -288,9 +389,9 @@ Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
 4. GitHub sertifikayı üretene kadar proxy'yi **DNS only** bırakın; `Enforce HTTPS`
    seçeneği aktifleşince proxy'yi açabilirsiniz.
 
-5. **Önemli:** GitHub Pages uzantısız URL'leri desteklemez — `/hakkimizda` 404 verir,
-   yalnızca `/hakkimizda.html` çalışır. Bu yolu seçerseniz canonical etiketlerini
-   geri çevirin. Proje kökünde:
+5. **Önemli:** GitHub Pages uzantısız URL'leri desteklemez — `/hakkimizda` 404
+   verir, yalnızca `/hakkimizda.html` çalışır. Bu yolu seçerseniz canonical
+   etiketlerini geri çevirin. Proje kökünde:
 
    ```bash
    python - <<'PY'
@@ -311,9 +412,10 @@ Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
    PY
    ```
 
-> Pages'e kıyasla dezavantajları: `_headers` ve `_redirects` dosyaları çalışmaz,
-> önizleme yayınları ve rollback yoktur, sertifika kurulumu daha kırılgandır,
-> canonical URL'leri elle çevirmek gerekir. Bu yüzden **Cloudflare Pages önerilir**.
+> Cloudflare'e kıyasla dezavantajları: `_headers` ve `_redirects` dosyaları
+> çalışmaz (güvenlik başlıkları ve cache politikası kaybolur), önizleme yayınları
+> ve rollback yoktur, sertifika kurulumu daha kırılgandır, canonical URL'leri
+> elle çevirmek gerekir. Bu yüzden **Cloudflare önerilir**.
 
 ---
 
@@ -321,12 +423,15 @@ Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
 
 | Belirti | Sebep / Çözüm |
 |---|---|
+| Custom domain eklenirken "already in use" / "conflict" | Hostname hâlâ Worker'a bağlı. Adım 2'deki sırayı izleyin: önce Worker'dan kaldırın. |
+| Pages proje adı reddediliyor | Aynı ad Worker tarafından kullanılıyor. Farklı ad seçin veya önce Worker'ı silin (Adım 8). |
 | `brams-tr.com` "Error 522" veya boş sayfa | Custom domain henüz `Active` değil. Pages → Custom domains ekranında durumu bekleyin. |
-| Alan adı hâlâ eski/park sayfasını gösteriyor | Tarayıcı ve DNS önbelleği. Gizli sekmede deneyin; `nslookup brams-tr.com` ile CNAME'i doğrulayın. |
+| Alan adı hâlâ eski içeriği / park sayfasını gösteriyor | Tarayıcı ve DNS önbelleği. Gizli sekmede deneyin; `nslookup brams-tr.com 1.1.1.1` ile doğrulayın. |
+| `www.brams-tr.com` sizde açılmıyor ama `nslookup ... 1.1.1.1` çalışıyor | Modeminizin DNS önbelleği eski "yok" cevabını tutuyor. Modemi yeniden başlatın veya bilgisayarın DNS'ini `1.1.1.1` yapın. `ipconfig /flushdns` yetmez — önbellek modemde. |
 | CSS yüklenmiyor, sayfa düz metin | `Build output directory` yanlış. `/` olmalı, `dist` veya `public` değil. |
+| Uzantısız URL 404 veriyor (`/hakkimizda`) | Build output directory yanlış ya da dosyalar alt klasöre yüklenmiş. |
 | Türkçe karakterler bozuk (Ã§, Ä±) | Dosya UTF-8 olarak kaydedilmemiş. Editörde encoding'i UTF-8 (BOM'suz) yapın. |
 | Sitede eski içerik görünüyor | Cloudflare önbelleği: Caching → **Purge Everything**. |
 | Formda "Gönder" hiçbir şey yapmıyor | Ziyaretçinin cihazında varsayılan e-posta uygulaması tanımlı değil. Kalıcı çözüm: README bölüm 7'deki form işleyicisine geçin. |
 | `www` yönlendirmesi çalışmıyor | Redirect Rule'un `brams-tr.com` zone'unda (proje içinde değil) tanımlı olduğundan emin olun. |
-| `www.brams-tr.com` "site bulunamadı" / `Non-existent domain` | Hostname **Route** olarak eklenmiş; Route DNS kaydı oluşturmaz. Satırı silip **Add Domain** ile ekleyin (Adım 2). |
-| Site hem `brams-tr.com` hem `*.workers.dev` üzerinden açılıyor | Normal; `Worker URL → Production` anahtarını kapatın (Adım 2 sonu). |
+| `sources_to_create_website/` içeriği public olmuş | CLI ile direct upload yapılmış. Adım 1'deki uyarıya bakın; Git entegrasyonuna geçin ve yeni bir deployment yayınlayın. |

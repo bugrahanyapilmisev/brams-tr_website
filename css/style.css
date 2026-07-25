@@ -233,6 +233,53 @@ h1, h2, h3, h4 {
   .split, .split-wide { grid-template-columns: 1fr; }
 }
 
+/* ---------------------------------------------------------
+   PHOTOGRAPHY
+   Paths are relative to this stylesheet, so the same rules work
+   for pages at the root and pages under /en/.
+   --------------------------------------------------------- */
+
+/* Framed photo — pillar images, solution bands */
+.photo {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper-3);
+}
+.photo img { width: 100%; display: block; transition: transform 0.9s var(--ease); }
+.photo:hover img { transform: scale(1.04); }
+.dark .photo { border-color: var(--line-dark); background: var(--navy-800); }
+
+/* Photo bleeding to the top edge of a .card */
+.card-media {
+  margin: -30px -28px 22px;
+  aspect-ratio: 8 / 5;
+  overflow: hidden;
+  background: var(--paper-3);
+}
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease);
+}
+.card:hover .card-media img { transform: scale(1.06); }
+.dark-card .card-media { background: var(--navy-800); }
+
+/* Full-bleed mood bands. Layer order: gold glow, navy veil, photograph.
+   The veil is heavy on purpose — the photograph sets mood, the type carries
+   the message and must stay at full contrast. */
+.band-industry {
+  background:
+    linear-gradient(180deg, rgba(11, 18, 25, 0.93) 0%, rgba(6, 11, 18, 0.97) 100%),
+    url('../assets/img/band-industry.jpg') center / cover no-repeat;
+}
+.band-geo {
+  background:
+    radial-gradient(ellipse 70% 60% at 82% 10%, rgba(184, 130, 43, 0.16), transparent 62%),
+    linear-gradient(180deg, rgba(11, 18, 25, 0.74) 0%, rgba(6, 11, 18, 0.86) 100%),
+    url('../assets/img/band-geo.jpg') center / cover no-repeat;
+}
+
 /* Blueprint texture used across dark bands */
 .blueprint { position: relative; overflow: hidden; }
 .blueprint::before {
@@ -515,10 +562,16 @@ h1, h2, h3, h4 {
    --------------------------------------------------------- */
 .hero {
   position: relative;
+  /* Ambarlı Port, Türkiye — the veil is angled so it is heaviest behind the
+     headline on the left and lightest over the photograph on the right. */
   background:
-    radial-gradient(ellipse 70% 60% at 78% 8%, rgba(184, 130, 43, 0.16), transparent 60%),
-    radial-gradient(ellipse 80% 70% at 10% 90%, rgba(35, 55, 78, 0.55), transparent 65%),
-    linear-gradient(160deg, var(--navy-850) 0%, var(--navy-950) 100%);
+    radial-gradient(ellipse 70% 60% at 80% 6%, rgba(184, 130, 43, 0.20), transparent 62%),
+    linear-gradient(100deg,
+      rgba(6, 11, 18, 0.94) 0%,
+      rgba(8, 14, 21, 0.86) 38%,
+      rgba(13, 22, 34, 0.60) 72%,
+      rgba(13, 22, 34, 0.52) 100%),
+    url('../assets/img/hero-port.jpg') center 42% / cover no-repeat;
   color: var(--silver-300);
   overflow: hidden;
   border-bottom: 1px solid rgba(184, 130, 43, 0.24);

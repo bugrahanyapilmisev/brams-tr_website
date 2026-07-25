@@ -24,7 +24,7 @@ Turkish at the root, English under `/en/`.
 ├── sitemap.xml           hreflang alternatifleriyle / with hreflang alternates
 ├── robots.txt
 ├── _headers              Cloudflare Pages: güvenlik + cache başlıkları
-├── _redirects            Cloudflare Pages: kısa URL yönlendirmeleri
+├── _redirects            Cloudflare Pages: boş — sayfa taşıma/silme için hazır
 └── favicon.ico
 ```
 
@@ -77,7 +77,46 @@ yuvarlatılmış köşelerden daha doğru bir dil.
 | `og-image.jpg` | Sosyal paylaşım görseli (1200×630) |
 | `favicon-32.png`, `apple-touch-icon.png`, `icon-256.png`, `favicon.ico` | İkonlar |
 
-Toplam ~430 KB. Kaynak logolar (3.3 MB) yayına çıkmaz.
+### Fotoğraflar
+
+`sources_to_create_website/Photos/` içindeki 85 görselden **14 tanesi** seçilip
+web boyutlarına indirildi. Seçim ölçütü: dosya adı Pixabay deseninde olanlar
+(`*_1280.jpg`) — ticari kullanım lisansı net olan set.
+
+| Dosya | Kaynak | Kullanıldığı yer |
+|---|---|---|
+| `hero-port.jpg` | ambarli-port-2409801 | Ana sayfa hero arka planı (Ambarlı Limanı) |
+| `band-industry.jpg` | welding-67640 | "İnşa ediyoruz" bandı (ana sayfa + hakkımızda) |
+| `band-geo.jpg` | continents-28616 | Coğrafi kimlik bandı |
+| `sector-infrastructure.jpg` | bridge-7432647 | Altyapı & Ulaşım sütunu |
+| `sector-energy.jpg` | renewable-1989416 | Enerji & Altyapı Hizmetleri sütunu |
+| `sector-industrial.jpg` | factory-6991799 | Endüstriyel & Dijital Gelişim sütunu |
+| `sector-agriculture.jpg` | agriculture-4208863 | Tarım & Kırsal Altyapı sütunu |
+| `solution-sales.jpg` | piling-rig-4429042 | Çözümler → Ekipman Satışı |
+| `solution-rental.jpg` | warehouse-8540045 | Çözümler → Ekipman Kiralama |
+| `solution-mobility.jpg` | speedometer-2389746 | Çözümler → Mobilite & Filo |
+| `group-*.jpg` (4) | worker / bridge / photovoltaic / cereals | Hakkımızda → Grup Ekosistemi |
+
+Sıkıştırma, tasarımın görüntüden ne kadarını gösterdiğine göre ayarlandı:
+koyu perde altındaki bant arka planları q52–62, kart görselleri q72.
+
+> ⚠️ **Yayınlanmayan materyal — bilinçli karar.** `Photos/` klasöründeki
+> şu dosyalar siteye **eklenmedi**:
+> - **ACESSI / US EXIM görselleri** (`ACESSI BDG Combined.png`, `US Exim*.jpeg`,
+>   `exim 6.jpeg`, `us exim 7.jpeg`, `trade 4.jpeg`, `hand-2722103`) — üçüncü
+>   tarafa ait marka taşıyorlar ve bir ABD devlet kurumuyla (US EXIM Bank)
+>   var olmayan bir iş birliği izlenimi yaratırlar. Strateji belgesi ihracat
+>   kredi kuruluşlarını **hedef kitle** olarak tanımlıyor, mevcut ortak olarak değil.
+> - **Üç PDF** (ACESSI kurumsal sunumu, örnek kredi limiti tablosu, Summit 2025) —
+>   başka bir şirketin materyali; biri de örnek bir finansal teklif.
+> - **Lisansı belirsiz 12 yüksek çözünürlüklü fotoğraf** (`cargo *.jpg`,
+>   `warehouse.jpg`, `screen.jpg`, `transport-logistics-products.jpg` vb.).
+>   Bunların telif durumu doğrulanamadı. Size aitse ya da lisanslıysa
+>   kalitesi daha yüksek — aynı dosya adıyla `assets/img/` içine üretip
+>   değiştirmek yeterli, HTML'de değişiklik gerekmez.
+
+Toplam `assets/img/` ~1.3 MB (logo görselleri + 14 fotoğraf).
+Kaynak klasör (139 MB) `.gitignore` içinde — yayına çıkmaz.
 
 > ⚠️ **Logo güncellenecek.** Mevcut logo dosyalarındaki kelime markası hâlâ
 > **BRAHMS** yazıyor; doğru marka adı **BRAMS**. Sitedeki tüm metin BRAMS'a
