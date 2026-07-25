@@ -65,37 +65,77 @@ alan adını bağlamadan önce siteyi burada test edin.
 
 ## Adım 2 — brams-tr.com alan adını bağlayın
 
-1. Pages projesi → **Custom domains** sekmesi → **Set up a custom domain**.
-2. `brams-tr.com` yazın → **Continue** → **Activate domain**.
+Proje → **Domains** sekmesi (Workers arayüzünde) veya **Custom domains**
+(klasik Pages arayüzünde).
+
+1. **+ Add Domain** → `brams-tr.com` → onaylayın.
+2. Aynı şekilde ikinci kez **+ Add Domain** → `www.brams-tr.com`.
 
 Alan adı aynı Cloudflare hesabında olduğu için **DNS kaydını Cloudflare kendisi
-oluşturur** — elle CNAME/A kaydı girmenize gerek yok. Oluşturduğu kayıt:
+oluşturur** — elle CNAME/A kaydı girmenize gerek yok. Kökte CNAME,
+**CNAME flattening** sayesinde desteklenir; apex için A kaydına gerek yoktur.
 
-| Type | Name | Target | Proxy |
-|---|---|---|---|
-| CNAME | `brams-tr.com` (kök) | `brams-tr.pages.dev` | Proxied (turuncu bulut) |
+### ⚠️ "Add Domain" ile "Add Route" aynı şey değildir
 
-> Cloudflare kökte CNAME'i **CNAME flattening** ile destekler; bu yüzden apex
-> alan adı için A kaydına ihtiyaç yoktur.
+Workers arayüzünde iki buton yan yana durur ve yanlışını seçmek sessizce
+başarısız olur:
 
-3. Aynı ekranda ikinci kez **Set up a custom domain** → `www.brams-tr.com` ekleyin.
-   Bu da otomatik olarak `brams-tr.pages.dev`'e CNAME olarak bağlanır.
+| | Ne yapar | DNS kaydı oluşturur mu? |
+|---|---|---|
+| **Add Domain** | Hostname'i worker'a bağlar **ve** DNS kaydını + TLS sertifikasını oluşturur | ✅ Evet |
+| **Add Route** | Yalnızca "bu URL deseni bu worker'a gitsin" der | ❌ **Hayır** |
+
+Bir hostname'i **Route** olarak eklerseniz ve o hostname için zaten bir DNS
+kaydı yoksa, adres **hiç çözümlenmez** — tarayıcı "site bulunamadı" der.
+Route, halihazırda var olan bir kaydın trafiğini yönlendirmek içindir.
+
+Doğru kurulumda `Domains` tablosu şöyle görünür — her iki satırda da
+**Environment: Production**, hiçbirinde `Route` yazmaz:
+
+| Name | Environment | Zone |
+|---|---|---|
+| `brams-tr.com` | Production | brams-tr.com |
+| `www.brams-tr.com` | Production | brams-tr.com |
+
+Kontrol: `nslookup www.brams-tr.com` bir Cloudflare IP'si döndürmeli.
+`Non-existent domain` dönüyorsa satır Route olarak eklenmiş — silin ve
+**Add Domain** ile yeniden ekleyin.
 
 **Status** sütunu `Active` olana kadar bekleyin (genelde 1–5 dakika, ilk sertifika
 için nadiren 15 dakikaya kadar çıkabilir).
+
+### workers.dev adresini kapatın
+
+**Settings → Domains & Routes** (veya **Domains** sekmesinin üstündeki
+**Worker URL** bölümü) → `Production` satırındaki anahtarı **kapatın**.
+
+Açık kaldığı sürece `brams-tr.<hesap>.workers.dev` sitenin ikinci bir public
+kopyasını sunar. Sayfalardaki `canonical` etiketleri arama motorlarını
+`brams-tr.com`'a yönlendirdiği için ciddi bir SEO zararı olmaz, ama kurumsal
+bir sitede gereksiz bir yüzey — kapatmak doğrusu. `Preview` anahtarı da kapalı
+olmalı.
 
 ---
 
 ## Adım 2.5 — URL biçimi hakkında bilmeniz gereken tek şey
 
-Cloudflare Pages, `hakkimizda.html` dosyasını **`/hakkimizda`** adresinde sunar ve
-`/hakkimizda.html` isteğini otomatik olarak `/hakkimizda`'ya (308) yönlendirir.
+Cloudflare, `hakkimizda.html` dosyasını **`/hakkimizda`** adresinde sunar ve
+`/hakkimizda.html` isteğini otomatik olarak `/hakkimizda`'ya yönlendirir
+(Workers'da 307, klasik Pages'te 308 — ikisi de zararsız).
 
 Bu davranışa uyum sağlanmıştır: sitedeki tüm `canonical`, `hreflang`, `og:url`
 etiketleri ve `sitemap.xml` kayıtları **uzantısız** biçimdedir
 (`https://brams-tr.com/hakkimizda`). Sayfa içi bağlantılar `.html` uzantılıdır —
-bu her ortamda (Pages, yerel sunucu, dosya sistemi) çalışır; Pages tarafında
-tek bir zararsız yönlendirme adımı oluşur.
+bu her ortamda (Cloudflare, yerel sunucu, dosya sistemi) çalışır; Cloudflare
+tarafında tek bir zararsız yönlendirme adımı oluşur.
+
+Canlıda doğrulanmış davranış:
+
+```
+/hakkimizda        →  200  (canonical: https://brams-tr.com/hakkimizda  ✓ eşleşiyor)
+/hakkimizda.html   →  307  →  /hakkimizda
+/olmayan-sayfa     →  404  (özel 404 sayfası)
+```
 
 > `_redirects` dosyasına `/hakkimizda → /hakkimizda.html` gibi bir kural
 > **eklemeyin** — Pages'in kendi yönlendirmesiyle sonsuz döngü oluşur.
@@ -109,6 +149,12 @@ tek bir zararsız yönlendirme adımı oluşur.
 tüm `canonical` etiketleri `https://brams-tr.com/...` olduğu için `www`'yu köke
 yönlendirin.
 
+> **Önkoşul:** Bu kuralın çalışması için `www.brams-tr.com` hostname'inin
+> Cloudflare üzerinden **çözümlenebilir ve proxy'li** olması gerekir. Yani Adım
+> 2'deki **Add Domain** işlemi yapılmış olmalı. Hostname hiç çözümlenmiyorsa
+> Redirect Rule hiçbir zaman tetiklenmez — istek Cloudflare'e ulaşmadan
+> tarayıcıda DNS hatasıyla ölür.
+
 **Cloudflare Dashboard → brams-tr.com (Websites listesinden) → Rules → Redirect Rules
 → Create rule**
 
@@ -121,7 +167,7 @@ yönlendirin.
   - ☑ **Preserve query string**
 - **Deploy**
 
-Test: `http://www.brams-tr.com/hakkimizda.html` → `https://brams-tr.com/hakkimizda.html`
+Test: `http://www.brams-tr.com/hakkimizda` → `https://brams-tr.com/hakkimizda`
 
 ---
 
@@ -281,4 +327,6 @@ Bu senaryoda Cloudflare yalnızca DNS + CDN olur.
 | Türkçe karakterler bozuk (Ã§, Ä±) | Dosya UTF-8 olarak kaydedilmemiş. Editörde encoding'i UTF-8 (BOM'suz) yapın. |
 | Sitede eski içerik görünüyor | Cloudflare önbelleği: Caching → **Purge Everything**. |
 | Formda "Gönder" hiçbir şey yapmıyor | Ziyaretçinin cihazında varsayılan e-posta uygulaması tanımlı değil. Kalıcı çözüm: README bölüm 7'deki form işleyicisine geçin. |
-| `www` yönlendirmesi çalışmıyor | Redirect Rule'un `brams-tr.com` zone'unda (Pages projesinde değil) tanımlı olduğundan emin olun. |
+| `www` yönlendirmesi çalışmıyor | Redirect Rule'un `brams-tr.com` zone'unda (proje içinde değil) tanımlı olduğundan emin olun. |
+| `www.brams-tr.com` "site bulunamadı" / `Non-existent domain` | Hostname **Route** olarak eklenmiş; Route DNS kaydı oluşturmaz. Satırı silip **Add Domain** ile ekleyin (Adım 2). |
+| Site hem `brams-tr.com` hem `*.workers.dev` üzerinden açılıyor | Normal; `Worker URL → Production` anahtarını kapatın (Adım 2 sonu). |
