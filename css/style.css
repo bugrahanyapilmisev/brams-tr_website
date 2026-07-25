@@ -495,6 +495,16 @@ h1, h2, h3, h4 {
   .burger { display: flex; }
 }
 
+/* Three language buttons + brand + burger will not fit a narrow phone, so the
+   decorative brand descriptor drops out and the switcher tightens up. */
+@media (max-width: 480px) {
+  .nav-inner { gap: 10px; }
+  .brand img { width: 36px; height: 36px; }
+  .brand-name b { font-size: 1.05rem; letter-spacing: 0.1em; }
+  .brand-name small { display: none; }
+  .lang a { padding: 5px 8px; font-size: 0.64rem; }
+}
+
 /* ---------------------------------------------------------
    6. BUTTONS
    --------------------------------------------------------- */

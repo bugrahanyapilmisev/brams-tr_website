@@ -7,6 +7,7 @@
     <loc>https://brams-tr.com/</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -16,6 +17,7 @@
     <loc>https://brams-tr.com/hakkimizda</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/hakkimizda"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/despre"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/hakkimizda"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -25,6 +27,7 @@
     <loc>https://brams-tr.com/sektorler</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/sektorler"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/sectors"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/sectoare"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/sektorler"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -34,6 +37,7 @@
     <loc>https://brams-tr.com/cozumler</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/cozumler"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/solutions"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/solutii"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/cozumler"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -43,6 +47,7 @@
     <loc>https://brams-tr.com/iletisim</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/iletisim"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/contact"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/iletisim"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -54,6 +59,7 @@
     <loc>https://brams-tr.com/en/</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -63,6 +69,7 @@
     <loc>https://brams-tr.com/en/about</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/hakkimizda"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/despre"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/hakkimizda"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -72,6 +79,7 @@
     <loc>https://brams-tr.com/en/sectors</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/sektorler"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/sectors"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/sectoare"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/sektorler"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -81,6 +89,7 @@
     <loc>https://brams-tr.com/en/solutions</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/cozumler"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/solutions"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/solutii"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/cozumler"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -90,6 +99,59 @@
     <loc>https://brams-tr.com/en/contact</loc>
     <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/iletisim"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/iletisim"/>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ===== Romanian ===== -->
+  <url>
+    <loc>https://brams-tr.com/ro/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/"/>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://brams-tr.com/ro/despre</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/hakkimizda"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/despre"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/hakkimizda"/>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://brams-tr.com/ro/sectoare</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/sektorler"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/sectors"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/sectoare"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/sektorler"/>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://brams-tr.com/ro/solutii</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/cozumler"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/solutions"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/solutii"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/cozumler"/>
+    <lastmod>2026-07-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://brams-tr.com/ro/contact</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://brams-tr.com/iletisim"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://brams-tr.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://brams-tr.com/ro/contact"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://brams-tr.com/iletisim"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>

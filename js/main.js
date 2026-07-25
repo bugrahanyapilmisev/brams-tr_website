@@ -113,13 +113,18 @@
         var el = form.querySelector('#' + id);
         return el ? el.value.trim() : '';
       };
-      var L = form.getAttribute('data-lang') === 'en'
-        ? { name: 'Name', company: 'Company', email: 'Email', phone: 'Phone',
-            topic: 'Enquiry type', country: 'Country', msg: 'Message',
-            subject: 'Website enquiry' }
-        : { name: 'Ad Soyad', company: 'Şirket', email: 'E-posta', phone: 'Telefon',
-            topic: 'Talep türü', country: 'Ülke', msg: 'Mesaj',
-            subject: 'Web sitesi talebi' };
+      var LABELS = {
+        tr: { name: 'Ad Soyad', company: 'Şirket', email: 'E-posta', phone: 'Telefon',
+              topic: 'Talep türü', country: 'Ülke', msg: 'Mesaj',
+              subject: 'Web sitesi talebi' },
+        en: { name: 'Name', company: 'Company', email: 'Email', phone: 'Phone',
+              topic: 'Enquiry type', country: 'Country', msg: 'Message',
+              subject: 'Website enquiry' },
+        ro: { name: 'Nume', company: 'Companie', email: 'E-mail', phone: 'Telefon',
+              topic: 'Tip de solicitare', country: 'Țară', msg: 'Mesaj',
+              subject: 'Solicitare de pe site' }
+      };
+      var L = LABELS[form.getAttribute('data-lang')] || LABELS.tr;
 
       var lines = [
         L.name + ': ' + get('cf-name'),

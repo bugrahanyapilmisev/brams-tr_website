@@ -1,10 +1,10 @@
 # BRAMS — brams-tr.com
 
 Kurumsal web sitesi. Statik HTML/CSS/JS — derleme adımı, bağımlılık ve build aracı yok.
-Türkçe kök dizinde, İngilizce `/en/` altında.
+Türkçe kök dizinde, İngilizce `/en/`, Romence `/ro/` altında.
 
 Corporate website. Static HTML/CSS/JS — no build step, no dependencies.
-Turkish at the root, English under `/en/`.
+Turkish at the root, English under `/en/`, Romanian under `/ro/`.
 
 ---
 
@@ -12,12 +12,12 @@ Turkish at the root, English under `/en/`.
 
 ```
 /
-├── index.html            Ana Sayfa        →  /en/index.html      Home
-├── hakkimizda.html       Hakkımızda       →  /en/about.html      About
-├── sektorler.html        Sektörler        →  /en/sectors.html    Sectors
-├── cozumler.html         Çözümler         →  /en/solutions.html  Solutions
-├── iletisim.html         İletişim         →  /en/contact.html    Contact
-├── 404.html              İki dilli hata sayfası / bilingual error page
+├── index.html        │ /en/index.html     │ /ro/index.html      Ana Sayfa
+├── hakkimizda.html   │ /en/about.html     │ /ro/despre.html     Hakkımızda
+├── sektorler.html    │ /en/sectors.html   │ /ro/sectoare.html   Sektörler
+├── cozumler.html     │ /en/solutions.html │ /ro/solutii.html    Çözümler
+├── iletisim.html     │ /en/contact.html   │ /ro/contact.html    İletişim
+├── 404.html              Üç dilli hata sayfası / trilingual error page
 ├── css/style.css         Tek tasarım sistemi / single design system
 ├── js/main.js            Tüm etkileşim / all interaction
 ├── assets/img/           Logodan üretilmiş görseller / assets generated from the logo
@@ -198,11 +198,39 @@ değiştirmeniz gerekmez; yalnızca `js/main.js` içindeki 6. blok:
 Adım adım Cloudflare kurulumu: **[DEPLOY.md](DEPLOY.md)**.
 Kısaca: GitHub'a push → Cloudflare Pages projesi → `brams-tr.com` özel alan adı.
 
-## 9. Sonraki dil / Next language
+## 9. Diller / Languages
 
-Strateji belgesi Romence'yi de öngörüyor. Yapı buna hazır: `/en/` klasörünü `/ro/`
-olarak kopyalayın, `hreflang` bloklarına `ro` satırını ekleyin, `sitemap.xml` ve dil
-değiştiriciyi güncelleyin. `css/` ve `js/` paylaşımlı kalır.
+Site üç dilde yayında. Türkçe kök dizinde (varsayılan), İngilizce `/en/`,
+Romence `/ro/` altında. `css/`, `js/` ve `assets/` üç dil arasında paylaşılır.
+
+| | Türkçe (kök) | English (`/en/`) | Română (`/ro/`) |
+|---|---|---|---|
+| Ana sayfa | `index.html` | `index.html` | `index.html` |
+| Kurumsal | `hakkimizda.html` | `about.html` | `despre.html` |
+| Sektörler | `sektorler.html` | `sectors.html` | `sectoare.html` |
+| Çözümler | `cozumler.html` | `solutions.html` | `solutii.html` |
+| İletişim | `iletisim.html` | `contact.html` | `contact.html` |
+
+**Bir dil eklerken / değiştirirken kontrol listesi:**
+
+1. Beş sayfayı çevirin; `<html lang>`, `<title>`, `description`, `og:locale` güncellenmeli.
+2. Her sayfada dört `hreflang` satırı olmalı: `tr`, `en`, `ro`, `x-default`
+   (`x-default` her zaman Türkçe sürümü gösterir).
+3. Üç dilin **tamamındaki** dil değiştiriciye yeni dili ekleyin — `hreflang`
+   karşılıklı olmak zorundadır, yoksa Google etiketleri yok sayar.
+4. `sitemap.xml`: yeni sayfaları ekleyin **ve** mevcut tüm kayıtlara yeni
+   `xhtml:link` satırını ekleyin.
+5. `js/main.js` → 6. blok: iletişim formu etiketleri için `LABELS` nesnesine
+   dil kodunu ekleyin, sayfada `data-lang="xx"` kullanın.
+6. `404.html`: satırı ekleyin.
+7. Dil düğmesi sayısı arttıkça mobil nav daralır — `css/style.css` içindeki
+   `@media (max-width: 480px)` bloğu marka alt başlığını gizler ve düğmeleri
+   sıkıştırır. Dördüncü bir dil eklenirse bu blok yeniden ayarlanmalı.
+
+> **Ülke adı notu:** Romence sürümde ülke adı, marka tutarlılığı için diğer iki
+> dille aynı şekilde **Türkiye** olarak yazıldı. Romence okuyucu için „Turcia”
+> tercih edilirse `/ro/` klasöründe tek bir bul-değiştir yeterlidir.
+> (România her yerde Romence yazımıyla kullanılıyor.)
 
 ## 10. Marka adı notu / Note on the brand name
 
