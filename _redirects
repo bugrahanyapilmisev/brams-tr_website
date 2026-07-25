@@ -1,0 +1,15 @@
+# Cloudflare Pages redirects.
+# Reference: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# NOTE — do NOT add rules like "/hakkimizda  /hakkimizda.html  301".
+# Cloudflare Pages already serves hakkimizda.html at /hakkimizda and issues its own
+# 308 from /hakkimizda.html -> /hakkimizda. A rule in the opposite direction would
+# create an infinite redirect loop.
+#
+# Canonical URLs across the site are therefore the extension-less form
+# (https://brams-tr.com/hakkimizda), matching what Pages actually serves.
+#
+# This file is kept for future use — e.g. retiring or renaming a page:
+#
+#   /eski-sayfa        /cozumler        301
+#   /en/old-page       /en/solutions    301

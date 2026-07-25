@@ -1,0 +1,17 @@
+# Working material that must not ship with the site
+sources_to_create_website/
+dmk_mimarlık_insaat_page/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+.qodo/
+
+# Temp
+*.tmp
+*.log

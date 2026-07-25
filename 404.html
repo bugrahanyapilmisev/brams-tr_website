@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sayfa bulunamadı | BRAMS</title>
+<meta name="robots" content="noindex, follow" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+<meta name="theme-color" content="#0b1219" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Cinzel:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+<style>
+  .err { min-height: 100vh; display: grid; place-items: center; text-align: center; }
+  /* the hero's diagonal accent line reads as a stray mark on a centred layout */
+  .err.hero::after { display: none; }
+  .err-code {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(5rem, 18vw, 12rem);
+    font-weight: 700;
+    line-height: 0.85;
+    color: var(--gold-500);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+<div class="err hero">
+  <div style="position:relative;z-index:1;padding:60px 24px;">
+    <img src="/assets/img/mark-on-dark.png" width="88" height="88" alt="BRAMS"
+         style="margin:0 auto 28px;" />
+    <p class="err-code">404</p>
+    <h1 class="h-md" style="color:#fff;text-transform:uppercase;margin-top:12px;">
+      Sayfa bulunamadı<br /><span style="color:var(--silver-500);font-size:.6em;">Page not found</span>
+    </h1>
+    <div class="rule center" style="background:var(--gold-400);"></div>
+    <p class="lead" style="color:var(--silver-400);margin:0 auto 32px;max-width:48ch;">
+      Aradığınız adres taşınmış ya da hiç var olmamış olabilir.<br />
+      The address you requested may have moved, or may never have existed.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn btn-gold" href="/index.html">Ana Sayfa <span class="arw">→</span></a>
+      <a class="btn btn-ghost-light" href="/en/index.html">English Home</a>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>
