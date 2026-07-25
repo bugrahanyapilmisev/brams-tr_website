@@ -25,6 +25,7 @@ Turkish at the root, English under `/en/`.
 ├── robots.txt
 ├── _headers              Cloudflare Pages: güvenlik + cache başlıkları
 ├── _redirects            Cloudflare Pages: boş — sayfa taşıma/silme için hazır
+├── tools/                Tek seferlik yardımcı betikler (logo düzeltmesi)
 └── favicon.ico
 ```
 
@@ -118,13 +119,34 @@ koyu perde altındaki bant arka planları q52–62, kart görselleri q72.
 Toplam `assets/img/` ~1.3 MB (logo görselleri + 14 fotoğraf).
 Kaynak klasör (139 MB) `.gitignore` içinde — yayına çıkmaz.
 
-> ⚠️ **Logo güncellenecek.** Mevcut logo dosyalarındaki kelime markası hâlâ
-> **BRAHMS** yazıyor; doğru marka adı **BRAMS**. Sitedeki tüm metin BRAMS'a
-> çevrildi, görseller geçici olarak olduğu gibi bırakıldı.
-> Yeni logo hazır olduğunda: iki kaynak dosyayı (koyu ve açık zeminli)
-> `sources_to_create_website/` altına koyup bu tablodaki tüm dosyaları yeniden
-> üretin — kırpma kutuları ve boyutlar bu dosyada belgelidir. HTML'de hiçbir
-> değişiklik gerekmez; dosya adları aynı kalır.
+### Logo kelime markası düzeltmesi (BRAHMS → BRAMS)
+
+Orijinal logo dosyalarında kelime markası **BRAHMS** yazıyordu. Düzeltildi:
+`tools/fix-wordmark.py`.
+
+Yöntem: **BRAHMS kelimesi BRAMS'ı içerir.** H harfi silinip kalan beş harf
+yeniden konumlandırıldı. Yani hiçbir harf yeniden çizilmedi, esnetilmedi ya da
+yeniden yazılmadı — harf formları, metalik gradyanlar, eğim/kabartma efektleri,
+altın çizgi ve iki alt satır orijinal tasarımla **piksel piksel aynı**.
+
+Harf aralıkları da orijinalden alındı. Yeni A→M aralığı için orijinal A→H
+değeri kullanıldı; çünkü H de M de tam boy dikey bir gövdeyle başlar, yani
+A'nın o gövdeye olan optik mesafesi aynıdır. Kelime, orijinalin kullandığı
+optik merkeze hizalandı (açık: 625, koyu: 632).
+
+Betiği yeniden çalıştırmak için:
+
+```bash
+python tools/fix-wordmark.py     # brams-fixed-{light,dark}.png üretir
+```
+
+> **Not:** Bu, profesyonel bir yeniden çizimin yerine geçmez ama yayına
+> uygundur. Marka kılavuzu için vektör (SVG/AI) bir kelime markası
+> hazırlandığında bu tablodaki dosyaları aynı adlarla yeniden üretmek yeterli;
+> HTML'de hiçbir değişiklik gerekmez.
+>
+> Dairesel sembol metin içermediği için düzeltmeden etkilenmedi —
+> `mark-on-*.png` ve tüm favicon'lar orijinaldeki sembolün aynısı.
 
 ## 5. Bir sayfa eklerken / Adding a page
 
@@ -159,7 +181,6 @@ Netleştiğinde eklenecekler:
   hangi projelerin ve rakamların paylaşılacağı netleştiğinde ilk sıkılaştırılacak
   bölüm budur.
 - **Kurumsal sunum PDF'i** (Faz 3) — hazır olduğunda footer'a doküman bağlantısı olarak.
-- **Logo dosyaları** — mevcut görseller hâlâ "BRAHMS" yazıyor. Bkz. bölüm 4'teki not.
 
 ## 7. İletişim formu / Contact form
 
@@ -190,11 +211,11 @@ metin, başlık, meta etiketi ve yapısal veri BRAMS kullanıyor.
 
 Elimize ulaşan iki kaynak materyal marka adını **BRAHMS** olarak yazıyordu
 (logo dosyaları ve `BRAHMS_Core_Narrative_Positioning_v2` strateji belgesi).
-Bunlar eski/hatalı yazımdır. Görsellerdeki kelime markası, yeni logo hazır
-olana kadar geçici olarak bu haliyle duruyor — bölüm 4'teki nota bakın.
+Bunlar eski/hatalı yazımdır. Logodaki kelime markası da düzeltildi — bölüm 4'e
+bakın.
 
 The correct brand name is **BRAMS**, consistent with the domain. All copy,
 titles, meta tags and structured data use BRAMS. The two source materials
 (the logo files and the strategy document) spelled it "BRAHMS"; that spelling
-is superseded. The wordmark inside the image assets still shows the old
-spelling until a corrected logo is supplied — see section 4.
+is superseded. The wordmark inside the image assets has been corrected too —
+see section 4.
